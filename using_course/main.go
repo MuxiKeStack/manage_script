@@ -6,10 +6,9 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/360EntSecGroup-Skylar/excelize"
 	"github.com/MuxiKeStack/muxiK-StackBackend/model"
 	"github.com/MuxiKeStack/muxiK-StackBackend/util"
-
-	"github.com/360EntSecGroup-Skylar/excelize"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/spf13/viper"
@@ -28,8 +27,8 @@ func init() {
 
 	// 配置环境变量
 	// export MUXIKSTACK_DB_ADDR=127.0.0.1:3306
-	// export MUXIKSTACK_DB_USERNAME=muxi
-	// export MUXIKSTACK_DB_PASSWORD=muxi
+	// export MUXIKSTACK_DB_USERNAME=root
+	// export MUXIKSTACK_DB_PASSWORD=root
 	viper.AutomaticEnv()
 	viper.SetEnvPrefix("MUXIKSTACK")
 	DBAddr = viper.GetString("DB_ADDR")
@@ -96,24 +95,6 @@ func chToNum(a string) string {
 		return day
 	}
 	return "error"
-
-	//switch a {
-	//case "一":
-	//	return "1"
-	//case "二":
-	//	return "2"
-	//case "三":
-	//	return "3"
-	//case "四":
-	//	return "4"
-	//case "五":
-	//	return "5"
-	//case "六":
-	//	return "6"
-	//case "日":
-	//	return "7"
-	//}
-	//return "error"
 }
 
 func analyzeTime(time string) string {
@@ -188,7 +169,6 @@ func main() {
 	}
 	dbOpenCmd := fmt.Sprintf("%s:%s@(%s)/muxikstack?charset=utf8&parseTime=True", DBUser, DBPwd, DBAddr)
 	db, err := gorm.Open("mysql", dbOpenCmd)
-	//db, err := gorm.Open("mysql", "*:*@(*.*.*.*:*)/muxikstack?charset=utf8&parseTime=True")
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -197,9 +177,6 @@ func main() {
 	fmt.Println("connection succeed")
 
 	db.SingularTable(true)
-	//db.CreateTable(User123{})
-	//user := &User123{Sid:"2018212693"}
-	//db.Create(user)
 
 	//f, err := excelize.OpenFile("./2.xlsx")
 	f, err := excelize.OpenFile(*fileFg)

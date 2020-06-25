@@ -11,7 +11,6 @@ import (
 
 	"github.com/MuxiKeStack/muxiK-StackBackend/model"
 	"github.com/MuxiKeStack/muxiK-StackBackend/util"
-
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/spf13/viper"
@@ -27,8 +26,8 @@ var (
 func init() {
 	// 配置环境变量
 	// export MUXIKSTACK_DB_ADDR=127.0.0.1:3306
-	// export MUXIKSTACK_DB_USERNAME=muxi
-	// export MUXIKSTACK_DB_PASSWORD=muxi
+	// export MUXIKSTACK_DB_USERNAME=root
+	// export MUXIKSTACK_DB_PASSWORD=root
 	viper.AutomaticEnv()
 	viper.SetEnvPrefix("MUXIKSTACK")
 	DBAddr = viper.GetString("DB_ADDR")
@@ -93,16 +92,16 @@ func main() {
 	}
 	dbOpenCmd := fmt.Sprintf("%s:%s@(%s)/muxikstack?charset=utf8&parseTime=True", DBUser, DBPwd, DBAddr)
 	db, err := gorm.Open("mysql", dbOpenCmd)
-	//db, err := gorm.Open("mysql", "*:*@(*.*.*.*:*)/muxikstack?charset=utf8&parseTime=True")
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 	defer db.Close()
+
 	fmt.Println("connection succeed")
 	fmt.Println("Start crawling and importing...")
 
-	var count int  // 计数
+	var count int // 计数
 	for i1 := 0; i1 < 28; i1++ {
 		strI := strconv.Itoa(i1 + 1)
 		resp, err := http.PostForm("http://spoc.ccnu.edu.cn/courseCenterController/fuzzyQuerySitesByConditions", url.Values{"pageNum": {strI}, "pageSize": {"1200"}})
@@ -128,7 +127,7 @@ func main() {
 			count++
 			fmt.Printf("正在载入第  %d  个课程...\r", count)
 			courseId := fill(b.Data.List[i2].CourseId)
-			if len(courseId) > 8{
+			if len(courseId) > 8 {
 				continue
 			}
 			teacher := b.Data.List[i2].Teacher
@@ -136,11 +135,11 @@ func main() {
 			key := util.HashCourseId(courseId, teacher)
 
 			oneCourse := &model.HistoryCourseModel{
-				Hash:    key,
-				Name:    name,
-				Teacher: teacher,
+				Hash:     key,
+				Name:     name,
+				Teacher:  teacher,
 				CourseId: courseId,
-				Type:    judge1(courseId[3:4]),
+				Type:     judge1(courseId[3:4]),
 			}
 			d := db.Where("hash = ?", key).First(&oneCourse)
 			if d.RecordNotFound() {

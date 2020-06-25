@@ -1,6 +1,6 @@
 # manage_script
 
-Scripts for MuxiKeStack.
+> Scripts for MuxiKeStack.
 
 + history_course：云课堂课程
 + using_course：选课手册课程
@@ -11,12 +11,10 @@ Scripts for MuxiKeStack.
 
 #### 环境变量
 
-> 一般而言无需改变环境变量
-
 ```shell
 export MUXIKSTACK_DB_ADDR=127.0.0.1:3306
-export MUXIKSTACK_DB_USERNAME=muxi
-export MUXIKSTACK_DB_PASSWORD=muxi
+export MUXIKSTACK_DB_USERNAME=root
+export MUXIKSTACK_DB_PASSWORD=root
 ```
 
 #### 导入选课手册
@@ -30,3 +28,7 @@ go run main.go -file sample.xlsx
 #### 导入云课堂课程
 
 同样，进入`history_course`目录，运行go文件
+
+```shell
+go run main.go
+```
