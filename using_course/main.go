@@ -194,11 +194,11 @@ func main() {
 		if n == 0 {
 			continue
 		}
-		name := row[1]
+		name := row[2]
 		if strings.Contains(name, "大学体育") {
 			name = name + analyzeClass(row[3])
 		}
-		sCourseId = row[2]
+		sCourseId = row[1]
 		teachers := util.GetTeachersSqStrBySplitting(row[8])
 		key := util.HashCourseId(sCourseId, teachers)
 		cred, _ := strconv.ParseFloat(row[4], 32)
@@ -207,11 +207,11 @@ func main() {
 			Hash:     key,
 			Academy:  row[0],
 			Name:     name,
-			CourseId: row[2],
+			CourseId: row[1],
 			ClassId:  row[3],
 			Credit:   float,
 			Teacher:  teachers,
-			Type:     judge1(row[2][3:4]),
+			Type:     judge1(row[1][3:4]),
 			Time1:    analyzeTime(row[10]),
 			Place1:   row[11],
 			Time2:    analyzeTime(row[12]),
@@ -233,13 +233,13 @@ func main() {
 		fmt.Printf("正在导入第  %d  条记录...\r", onecourse.Id)
 	}
 
-	for i := 6; i <= 9; i++ {
-		rows = f.GetRows("201" + strconv.Itoa(i) + "级")
+	for i := 17; i <= 20; i++ {
+		rows = f.GetRows("20" + strconv.Itoa(i) + "级")
 		for n, row := range rows {
 			if n == 0 {
 				continue
 			}
-			sCourseId = row[2]
+			sCourseId = row[1]
 			teachers := util.GetTeachersSqStrBySplitting(row[8])
 			key := util.HashCourseId(sCourseId, teachers)
 			cred, _ := strconv.ParseFloat(row[4], 32)
@@ -247,12 +247,12 @@ func main() {
 			onecourse := &model.UsingCourseModel{
 				Hash:     key,
 				Academy:  row[0],
-				Name:     row[1],
-				CourseId: row[2],
+				Name:     row[2],
+				CourseId: row[1],
 				ClassId:  row[3],
 				Credit:   float,
 				Teacher:  teachers,
-				Type:     judge1(row[2][3:4]),
+				Type:     judge1(row[1][3:4]),
 				Time1:    analyzeTime(row[10]),
 				Place1:   row[11],
 				Time2:    analyzeTime(row[12]),
